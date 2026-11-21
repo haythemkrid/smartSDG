@@ -1,0 +1,13 @@
+id: soilguard
+version: 0.1.0
+title: SoilGuard
+sdg: [15]
+sensors: [sentinel-2-l2a]
+indices: [salinity_index]
+aoi_id: oasis
+temporal_resolution: monthly
+spatial_resolution_m: 10
+params: {}
+outputs:
+  - {name: salinity_map, type: cog}
+  - {name: salinity_timeseries, type: geoparquet}

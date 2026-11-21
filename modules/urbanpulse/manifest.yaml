@@ -1,0 +1,13 @@
+id: urbanpulse
+version: 0.1.0
+title: UrbanPulse
+sdg: [11]
+sensors: [sentinel-2-l2a]
+indices: [ndbi]
+aoi_id: grand_tunis
+temporal_resolution: yearly
+spatial_resolution_m: 10
+params: {}
+outputs:
+  - {name: urban_extent, type: cog}
+  - {name: heat_islands, type: geoparquet}
