@@ -1,0 +1,5 @@
+# Deployed module IDs - managed by make deploy-module
+# HydroWatch and UrbanPulse are deployed by default; SoilGuard is not until the demo.
+deployed:
+  - hydrowatch
+  - urbanpulse
