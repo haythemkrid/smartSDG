@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "name": "tunisia_aois",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sidi_salem",
+        "name": "Sidi Salem dam (HydroWatch pilot)",
+        "source": "bbox hardcoded in hydrowatch_repo/main.py",
+        "note": "Rectangle around the reservoir, NOT the reservoir outline. It also contains river and other water."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[9.355, 36.585], [9.455, 36.585], [9.455, 36.655], [9.355, 36.655], [9.355, 36.585]]]
+      }
+    }
+  ]
+}

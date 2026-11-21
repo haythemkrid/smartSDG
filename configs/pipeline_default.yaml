@@ -1,0 +1,13 @@
+# Global parameters. Values come from the spike (hydrowatch_repo). Do not change without asking.
+stac:
+  url: https://planetarycomputer.microsoft.com/api/stac/v1
+  collection: sentinel-2-l2a
+date_range:
+  start: "2023-01-01"
+  end: "2026-11-01"
+max_cloud: 15                  # scene-level eo:cloud_cover < 15
+scene_selection: first_per_quarter   # earliest acceptable scene of each calendar quarter
+resolution_m: 10
+scl_cloud_classes: [3, 8, 9, 10]     # cloud shadow, cloud medium prob, cloud high prob, thin cirrus
+crs: native                    # spike does not reproject: uses the tile's UTM CRS. TODO(haythem): confirm EPSG by running
+seed: 42

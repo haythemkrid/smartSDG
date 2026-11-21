@@ -1,0 +1,31 @@
+id: hydrowatch
+version: 0.1.0
+title: HydroWatch
+sdg: [6, 13]
+sensors: [sentinel-2-l2a]
+indices: [ndwi]
+aoi_id: sidi_salem
+temporal_resolution: quarterly
+spatial_resolution_m: 10
+params:
+  water:
+    weak_label_ndwi_threshold: 0.05
+    train_on: first_scene
+    train_sample_pixels: 20000
+    pixel_classifier: {n_estimators: 50, max_depth: 8}
+  forecast:
+    model: {n_estimators: 150, max_depth: 4}
+    test_start_quarter: "2026-Q1"
+    features: [lag_1_area, weighted_catchment_precip_mm, lag_1_catchment_precip_mm, mean_temp_c, sin_q, cos_q]
+  weather:
+    provider: open-meteo-archive
+    url: https://archive-api.open-meteo.com/v1/archive
+    timezone: Africa/Tunis
+    precip_points:            # daily precipitation_sum, summed per quarter
+      upper_algeria: {lat: 36.28, lon: 7.95, weight: 0.45}
+      mid_border:    {lat: 36.45, lon: 8.44, weight: 0.35}
+      local_beja:    {lat: 36.62, lon: 9.40, weight: 0.20}   # weights: source unknown, see unknowns
+    temperature_point: {lat: 36.62, lon: 9.40}               # daily temperature_2m_mean, mean per quarter
+outputs:
+  - {name: water_mask, type: cog}
+  - {name: area_timeseries, type: geoparquet}
