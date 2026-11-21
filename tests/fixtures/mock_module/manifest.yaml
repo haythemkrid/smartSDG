@@ -1,0 +1,13 @@
+id: mock_module
+version: 0.1.0
+title: Mock Module
+sdg: [13]
+sensors: [sentinel-2-l2a]
+indices: [ndwi]
+aoi_id: sidi_salem
+temporal_resolution: quarterly
+spatial_resolution_m: 10
+params: {}
+outputs:
+  - {name: mock_layer, type: cog}
+  - {name: mock_timeseries, type: geoparquet}
