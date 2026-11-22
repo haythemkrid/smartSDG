@@ -56,7 +56,6 @@ async def list_layers(module_id: str) -> list[GeoLayer]:
         raise HTTPException(status_code=404, detail=f"Module '{module_id}' not deployed")
 
     # Scan data/outputs/{module_id}/ for exported layers
-    import os
     from pathlib import Path
 
     outputs_dir = Path(f"data/outputs/{module_id}")
@@ -97,9 +96,10 @@ async def get_timeseries(module_id: str) -> list[TimeSeriesPoint]:
     aoi_id = manifest.aoi_id if manifest else None
 
     # Read time series from GeoParquet in data/outputs/{module_id}/
-    import pandas as pd
-    from pathlib import Path
     from datetime import date
+    from pathlib import Path
+
+    import pandas as pd
 
     outputs_dir = Path(f"data/outputs/{module_id}")
     if not outputs_dir.exists():
