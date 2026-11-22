@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 from datetime import date
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
+from pystac import Item, ItemCollection
 
 from core.ingestion.stac_client import NoDataError, STACClient
 from core.sdk.schemas import AOI
@@ -35,11 +37,20 @@ class TestSTACClient:
             },
         )
 
-    def test_search_raises_no_data_error_on_empty(self, sidi_salem_aoi: AOI) -> None:
+    @patch("core.ingestion.stac_client.pystac_client.Client.open")
+    def test_search_raises_no_data_error_on_empty(
+        self, mock_catalog_open: MagicMock, sidi_salem_aoi: AOI
+    ) -> None:
         """Test that search raises NoDataError when no items found."""
+        # Mock the catalog to return no items
+        mock_catalog = MagicMock()
+        mock_search = MagicMock()
+        mock_search.items.return_value = iter([])
+        mock_catalog.search.return_value = mock_search
+        mock_catalog_open.return_value = mock_catalog
+
         client = STACClient()
 
-        # Use a future date range that should have no data
         with pytest.raises(NoDataError):
             client.search(
                 aoi=sidi_salem_aoi,
