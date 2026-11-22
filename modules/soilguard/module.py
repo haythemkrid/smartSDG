@@ -143,7 +143,9 @@ class SoilGuardModule(BaseSDGModule):
 
         # Salinity params
         self._mlflow.log_param("salinity_threshold", self.salinity_params.get("salinity_threshold"))
-        self._mlflow.log_param("train_sample_pixels", self.salinity_params.get("train_sample_pixels"))
+        self._mlflow.log_param(
+            "train_sample_pixels", self.salinity_params.get("train_sample_pixels")
+        )
         self._mlflow.log_param(
             "pixel_clf_n_estimators",
             self.salinity_params.get("pixel_classifier", {}).get("n_estimators"),

@@ -181,9 +181,7 @@ class TestSoilGuardModule:
         # but we can verify the method exists and returns correct structure
         pass  # Integration test would need real/mocked raster data
 
-    def test_train_infer_evaluate_flow(
-        self, soilguard_module, mock_compute_indices_records
-    ):
+    def test_train_infer_evaluate_flow(self, soilguard_module, mock_compute_indices_records):
         """Test the train -> infer -> evaluate flow with synthetic data."""
         # Create dataset as ingest would return
         dataset = {

@@ -9,8 +9,8 @@ stages:
       size: 650
     - path: configs/tunisia_aois.geojson
       hash: md5
-      md5: cb41a1cc109bc77be475ea231b84c2db
-      size: 576
+      md5: 66a52f0c3e439a0953dde874300d10c1
+      size: 1571
     - path: core/ingestion/geo.py
       hash: md5
       md5: 3ef562e2ba3cb17c44a2c5142027b23f
@@ -21,12 +21,12 @@ stages:
       size: 2088
     - path: core/ingestion/stac_client.py
       hash: md5
-      md5: b934462f17dba0561053799b09601582
-      size: 6861
+      md5: 53b2e1d9f9b70e45373e3b3171d3f9ca
+      size: 7117
     - path: core/registry/module_loader.py
       hash: md5
-      md5: aed620b8b186ddf2da4f3ad6d2b604dd
-      size: 3267
+      md5: b16796a50d7c66542b60f9b3f31274e6
+      size: 4626
     - path: core/sdk/base_module.py
       hash: md5
       md5: 776402fc8eec3b59c7a2e449da74cf49
@@ -41,8 +41,8 @@ stages:
       size: 1162
     - path: modules/hydrowatch/module.py
       hash: md5
-      md5: b9a77799f7a3507d42756f89b923ea96
-      size: 23897
+      md5: 64218f8efa8603bd82a799cf011e0695
+      size: 24145
     - path: modules/hydrowatch/weather.py
       hash: md5
       md5: 9a09a338ae1256ee5394cdb955334d5c
@@ -70,8 +70,8 @@ stages:
     outs:
     - path: data/processed/hydrowatch/ingest.json
       hash: md5
-      md5: b1383fde44bf14267b93d467a5366fcc
-      size: 220432
+      md5: 44fd75124b1d30b63d9b385e26da63fe
+      size: 219750
   hydrowatch_compute_indices:
     cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline compute-indices
     deps:
@@ -85,12 +85,12 @@ stages:
       size: 2088
     - path: data/processed/hydrowatch/ingest.json
       hash: md5
-      md5: b1383fde44bf14267b93d467a5366fcc
-      size: 220432
+      md5: 44fd75124b1d30b63d9b385e26da63fe
+      size: 219750
     - path: modules/hydrowatch/module.py
       hash: md5
-      md5: b9a77799f7a3507d42756f89b923ea96
-      size: 23897
+      md5: 64218f8efa8603bd82a799cf011e0695
+      size: 24145
     params:
       params.yaml:
         hydrowatch_compute_indices:
