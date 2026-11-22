@@ -8,7 +8,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-from pystac import Item, ItemCollection
 
 from core.ingestion.stac_client import NoDataError, STACClient
 from core.sdk.schemas import AOI

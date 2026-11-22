@@ -1,7 +1,8 @@
 # ADR-001 — Technology stack
-Status: PROPOSED (items ✔ come from the human's layout; confirm the rest)
+Status: ACCEPTED (reflects actual implementation)
 
-- Python 3.13 ✔ (cpython-313 bytecode in the spike); fall back to 3.12 only if a geo wheel is missing, and record it
+- Python >=3.11 (pyproject.toml: `requires-python = ">=3.11"`); Python 3.11 used in CI/dev
+- Package manager: pip (via pyproject.toml + uv for locking); **DEVIATION**: original layout mentioned Python 3.13, but 3.11 is the minimum supported and used
 - FastAPI ✔, Pydantic v2 ✔ (schemas.py), MLflow ✔, DVC ✔, pystac-client ✔, rasterio ✔
 - planetary-computer (signing), rioxarray/xarray (array handling on top of rasterio), geopandas + GeoParquet
 - Frontend: Streamlit + Leafmap/MapLibre ✔
@@ -17,3 +18,7 @@ File-based, offline-testable; the only external dependency at runtime is Planeta
 
 ## Added after reading the spike
 scikit-learn ✔ (RandomForest), pandas ✔, numpy ✔, requests ✔ (Open-Meteo). `rasterio` ✔ is the raster reader; rioxarray is optional.
+
+## Deviations from original layout
+- **Python version**: Original layout (AGENTS.md) specified Python 3.13; actual implementation uses `>=3.11` with 3.11 as the tested version. This provides broader compatibility while keeping modern Python features.
+- **Package manager**: Original layout implied uv as primary; implementation uses pip with uv.lock for reproducible installs. pyproject.toml is the source of truth.

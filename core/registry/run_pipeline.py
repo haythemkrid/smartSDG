@@ -45,14 +45,18 @@ def get_module_final_outputs(module_id: str) -> list[str]:
         dvc_data = yaml.safe_load(f)
 
     stages = dvc_data.get("stages", {})
-    module_stages = {name: data for name, data in stages.items() if name.startswith(f"{module_id}_")}
+    module_stages = {
+        name: data for name, data in stages.items() if name.startswith(f"{module_id}_")
+    }
 
     if not module_stages:
         return []
 
     # Build dependency graph
     stage_deps = {name: set(data.get("deps", [])) for name, data in module_stages.items()}
-    stage_outs = {name: set(_extract_out_paths(data.get("outs", []))) for name, data in module_stages.items()}
+    stage_outs = {
+        name: set(_extract_out_paths(data.get("outs", []))) for name, data in module_stages.items()
+    }
 
     # Find stages that are not depended upon by other stages in this module
     all_deps = set()
