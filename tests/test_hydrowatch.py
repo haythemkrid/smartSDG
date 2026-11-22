@@ -192,7 +192,7 @@ class TestHydroWatchModule:
         assert hydrowatch_module.water_params["weak_label_ndwi_threshold"] == 0.05
         assert hydrowatch_module.water_params["train_on"] == "first_scene"
         assert hydrowatch_module.water_params["train_sample_pixels"] == 20000
-        assert hydrowatch_module.forecast_params["test_start_quarter"] == "2026-Q1"
+        assert hydrowatch_module.forecast_params["test_start_quarter"] == "2024-Q3"
         assert "lag_1_area" in hydrowatch_module.forecast_params["features"]
 
     def test_weather_client_creation(self, hydrowatch_module: HydroWatchModule) -> None:
@@ -262,7 +262,7 @@ class TestHydroWatchModule:
         assert "pixel_clf" in model
         assert "forecaster" in model
         assert "train_cutoff" in model
-        assert model["train_cutoff"] == "2026-Q1"
+        assert model["train_cutoff"] == "2024-Q3"
         assert hydrowatch_module._pixel_clf is not None
         assert hydrowatch_module._forecaster is not None
 
@@ -401,7 +401,7 @@ class TestSpikeBaseline:
         # Forecast params from spike
         assert hydrowatch_module.forecast_params["model"]["n_estimators"] == 150
         assert hydrowatch_module.forecast_params["model"]["max_depth"] == 4
-        assert hydrowatch_module.forecast_params["test_start_quarter"] == "2026-Q1"
+        assert hydrowatch_module.forecast_params["test_start_quarter"] == "2024-Q3"
 
         # Weather params from spike
         assert len(hydrowatch_module.weather_params["precip_points"]) == 3

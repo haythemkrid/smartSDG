@@ -464,6 +464,10 @@ class HydroWatchModule(BaseSDGModule):
             train_df = ml_df[ml_df["quarter"] < train_cutoff].copy()
             test_df = ml_df[ml_df["quarter"] >= train_cutoff].copy()
 
+            # Initialize predicted_ha column (will be filled for test quarters)
+            test_df["predicted_ha"] = np.nan
+            test_df["error_pct"] = np.nan
+
             # Recursive walk-forward backtest (as in spike model.py)
             backtest_preds = []
             if len(train_df) > 0:
@@ -498,24 +502,24 @@ class HydroWatchModule(BaseSDGModule):
                 test_df.loc[test_df.index[i], "predicted_ha"] = round(pred, 2)
 
             # Compute error percentage (hindcast with oracle weather - defect #4)
-            test_df["error_pct"] = (
-                np.abs(test_df["water_area_ha"] - test_df["predicted_ha"])
-                / test_df["water_area_ha"]
-                * 100
-            ).round(2)
+            if len(test_df) > 0:
+                test_df["error_pct"] = (
+                    np.abs(test_df["water_area_ha"] - test_df["predicted_ha"])
+                    / test_df["water_area_ha"]
+                    * 100
+                ).round(2)
 
             # Combine train and test for full area time series
-            area_ts = pd.concat(
-                [
-                    train_df[["quarter", "water_area_ha"]].rename(
-                        columns={"water_area_ha": "area_ha"}
-                    ),
-                    test_df[["quarter", "water_area_ha", "predicted_ha"]].rename(
-                        columns={"water_area_ha": "area_ha"}
-                    ),
-                ],
-                ignore_index=True,
+            train_part = train_df[["quarter", "water_area_ha"]].rename(
+                columns={"water_area_ha": "area_ha"}
             )
+            if len(test_df) > 0:
+                test_part = test_df[["quarter", "water_area_ha", "predicted_ha"]].rename(
+                    columns={"water_area_ha": "area_ha"}
+                )
+                area_ts = pd.concat([train_part, test_part], ignore_index=True)
+            else:
+                area_ts = train_part.copy()
 
             return {
                 "records": records,
@@ -613,13 +617,18 @@ class HydroWatchModule(BaseSDGModule):
                 nodata=0,
             )
 
+            # Parse quarter like "2024-Q1" -> date(2024, 1, 1)
+            year, q = quarter.split("-Q")
+            month = (int(q) - 1) * 3 + 1
+            approx_date = pd.Timestamp(year=int(year), month=month, day=1).date()
+
             layers.append(
                 GeoLayer(
                     module_id=self.manifest.id,
                     name=f"water_mask_{quarter}",
                     kind="cog",
                     path=cog_path,
-                    time=pd.to_datetime(quarter.replace("-Q", "-01")).date(),  # Approximate date
+                    time=approx_date,
                     bbox=None,
                 )
             )

@@ -15,7 +15,7 @@ params:
     pixel_classifier: {n_estimators: 50, max_depth: 8}
   forecast:
     model: {n_estimators: 150, max_depth: 4}
-    test_start_quarter: "2026-Q1"
+    test_start_quarter: "2024-Q3"
     features: [lag_1_area, weighted_catchment_precip_mm, lag_1_catchment_precip_mm, mean_temp_c, sin_q, cos_q]
   weather:
     provider: open-meteo-archive
