@@ -36,7 +36,7 @@ lint:
 run-pipeline:
 	@if [ -z "$(MODULE)" ]; then echo "Error: MODULE not specified. Usage: make run-pipeline MODULE=hydrowatch"; exit 1; fi
 	@echo "Running DVC pipeline for module: $(MODULE)..."
-	.venv/bin/dvc repro
+	.venv/bin/python -m core.registry.run_pipeline $(MODULE)
 
 # Deploy a module
 deploy-module:
