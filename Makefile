@@ -1,7 +1,7 @@
 # SmartSDG Core Engine Makefile
 # Commands from AGENTS.md
 
-.PHONY: setup test lint run-pipeline deploy-module up help
+.PHONY: setup test lint run-pipeline deploy-module up restore-demo snapshot-demo help
 
 # Default target
 help:
@@ -49,3 +49,17 @@ up:
 	@echo "Starting Docker Compose stack..."
 	docker compose up -d
 	@echo "Services started. API: http://localhost:8000, MLflow: http://localhost:5000, Frontend: http://localhost:8501"
+
+# Restore demo data from demo_data/ to data/outputs/
+restore-demo:
+	@echo "Restoring demo data..."
+	rm -rf data/outputs
+	cp -r demo_data data/outputs
+	@echo "Demo data restored."
+
+# Snapshot current data/outputs/ to demo_data/
+snapshot-demo:
+	@echo "Snapshotting demo data..."
+	rm -rf demo_data
+	cp -r data/outputs demo_data
+	@echo "Demo data snapshotted."
