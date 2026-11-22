@@ -37,12 +37,12 @@ stages:
       size: 1564
     - path: modules/hydrowatch/manifest.yaml
       hash: md5
-      md5: bb60f72f3aec850860a464bbc779129f
+      md5: 4b10d981d25d4805d41edcc0fb6f803a
       size: 1162
     - path: modules/hydrowatch/module.py
       hash: md5
-      md5: 64218f8efa8603bd82a799cf011e0695
-      size: 24145
+      md5: 2c39050bb7bcbcdc4a8fd67aede1b940
+      size: 24578
     - path: modules/hydrowatch/weather.py
       hash: md5
       md5: 9a09a338ae1256ee5394cdb955334d5c
@@ -70,8 +70,8 @@ stages:
     outs:
     - path: data/processed/hydrowatch/ingest.json
       hash: md5
-      md5: 44fd75124b1d30b63d9b385e26da63fe
-      size: 219750
+      md5: bdc1896d3d0a38bb0839b15f55ff44e8
+      size: 220432
   hydrowatch_compute_indices:
     cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline compute-indices
     deps:
@@ -85,12 +85,12 @@ stages:
       size: 2088
     - path: data/processed/hydrowatch/ingest.json
       hash: md5
-      md5: 44fd75124b1d30b63d9b385e26da63fe
-      size: 219750
+      md5: bdc1896d3d0a38bb0839b15f55ff44e8
+      size: 220432
     - path: modules/hydrowatch/module.py
       hash: md5
-      md5: 64218f8efa8603bd82a799cf011e0695
-      size: 24145
+      md5: 2c39050bb7bcbcdc4a8fd67aede1b940
+      size: 24578
     params:
       params.yaml:
         hydrowatch_compute_indices:
