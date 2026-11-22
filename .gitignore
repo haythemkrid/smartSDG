@@ -10,7 +10,8 @@ data/outputs/*
 dist/
 build/
 .uv/
-.dvc/
+.dvc/cache/
+.dvc/tmp/
 .cache/
 .pytest_cache/
 .coverage
