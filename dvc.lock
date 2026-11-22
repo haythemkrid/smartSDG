@@ -1,0 +1,103 @@
+schema: '2.0'
+stages:
+  hydrowatch_ingest:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline ingest
+    deps:
+    - path: configs/pipeline_default.yaml
+      hash: md5
+      md5: 039bb825303ef4b99a292d12d8dd267a
+      size: 650
+    - path: configs/tunisia_aois.geojson
+      hash: md5
+      md5: cb41a1cc109bc77be475ea231b84c2db
+      size: 576
+    - path: core/ingestion/geo.py
+      hash: md5
+      md5: 3ef562e2ba3cb17c44a2c5142027b23f
+      size: 6312
+    - path: core/ingestion/indices.py
+      hash: md5
+      md5: 051af427297346b9fdb5c1032ac4370c
+      size: 2088
+    - path: core/ingestion/stac_client.py
+      hash: md5
+      md5: b934462f17dba0561053799b09601582
+      size: 6861
+    - path: core/registry/module_loader.py
+      hash: md5
+      md5: aed620b8b186ddf2da4f3ad6d2b604dd
+      size: 3267
+    - path: core/sdk/base_module.py
+      hash: md5
+      md5: 776402fc8eec3b59c7a2e449da74cf49
+      size: 1654
+    - path: core/sdk/schemas.py
+      hash: md5
+      md5: fd3c220d2ebc6dd50a67e319848d9fb3
+      size: 1564
+    - path: modules/hydrowatch/manifest.yaml
+      hash: md5
+      md5: bb60f72f3aec850860a464bbc779129f
+      size: 1162
+    - path: modules/hydrowatch/module.py
+      hash: md5
+      md5: b9a77799f7a3507d42756f89b923ea96
+      size: 23897
+    - path: modules/hydrowatch/weather.py
+      hash: md5
+      md5: 9a09a338ae1256ee5394cdb955334d5c
+      size: 6350
+    params:
+      params.yaml:
+        hydrowatch_ingest:
+          stac:
+            url: https://planetarycomputer.microsoft.com/api/stac/v1
+            collection: sentinel-2-l2a
+          date_range:
+            start: '2023-01-01'
+            end: '2026-11-01'
+          max_cloud: 15
+          scene_selection: first_per_quarter
+          resolution_m: 10
+          scl_cloud_classes:
+          - 3
+          - 8
+          - 9
+          - 10
+          crs: native
+          seed: 42
+          aoi_id: sidi_salem
+    outs:
+    - path: data/processed/hydrowatch/ingest.json
+      hash: md5
+      md5: b1383fde44bf14267b93d467a5366fcc
+      size: 220432
+  hydrowatch_compute_indices:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline compute-indices
+    deps:
+    - path: core/ingestion/geo.py
+      hash: md5
+      md5: 3ef562e2ba3cb17c44a2c5142027b23f
+      size: 6312
+    - path: core/ingestion/indices.py
+      hash: md5
+      md5: 051af427297346b9fdb5c1032ac4370c
+      size: 2088
+    - path: data/processed/hydrowatch/ingest.json
+      hash: md5
+      md5: b1383fde44bf14267b93d467a5366fcc
+      size: 220432
+    - path: modules/hydrowatch/module.py
+      hash: md5
+      md5: b9a77799f7a3507d42756f89b923ea96
+      size: 23897
+    params:
+      params.yaml:
+        hydrowatch_compute_indices:
+          water:
+            weak_label_ndwi_threshold: 0.05
+    outs:
+    - path: data/processed/hydrowatch/indices.json
+      hash: md5
+      md5: cad72cae47f94ff36dd7b45a9cda70e0
+      size: 53

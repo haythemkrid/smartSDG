@@ -1,0 +1,100 @@
+# SmartSDG Core Engine - Docker Compose Stack
+
+services:
+  # MLflow Tracking Server
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.13.0
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlruns
+      - ./mlflow_artifacts:/mlflow_artifacts
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri file:/mlruns
+      --default-artifact-root /mlflow_artifacts
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # FastAPI Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./mlflow_artifacts:/app/mlflow_artifacts
+      - ./data:/app/data
+      - ./configs:/app/configs
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Streamlit Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./core:/app/core
+      - ./modules:/app/modules
+      - ./configs:/app/configs
+    environment:
+      - API_BASE=http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Orchestrator - runs DVC pipeline for a module
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.orchestrator
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./mlflow_artifacts:/app/mlflow_artifacts
+      - ./data:/app/data
+      - ./configs:/app/configs
+      - ./core:/app/core
+      - ./modules:/app/modules
+      - ./dvc.yaml:/app/dvc.yaml
+      - ./dvc.lock:/app/dvc.lock
+      - ./.dvc:/app/.dvc
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - MODULE=hydrowatch
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    # Not a long-running service - runs once and exits
+    profiles:
+      - pipeline
+    restart: "no"
+
+volumes:
+  mlruns:
+  mlflow_artifacts:

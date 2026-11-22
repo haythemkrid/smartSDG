@@ -5,9 +5,13 @@ sdg: [15]
 sensors: [sentinel-2-l2a]
 indices: [salinity_index]
 aoi_id: oasis
-temporal_resolution: monthly
+temporal_resolution: quarterly
 spatial_resolution_m: 10
-params: {}
+params:
+  salinity:
+    salinity_threshold: 0.0
+    train_sample_pixels: 10000
+    pixel_classifier: {n_estimators: 50, max_depth: 8}
 outputs:
-  - {name: salinity_map, type: cog}
+  - {name: salinity_layer, type: cog}
   - {name: salinity_timeseries, type: geoparquet}

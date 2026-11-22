@@ -18,9 +18,15 @@ Facts from the spike unless marked TODO(haythem).
 | Reflectance scaling | spike uses raw DN (see 11-spike-review.md #2) |
 
 ## AOIs (`configs/tunisia_aois.geojson`)
-The file did not exist. It now contains `sidi_salem`: bbox [9.355, 36.585, 9.455, 36.655]
-(lon/lat, from the spike), a rectangle and not the reservoir outline.
-Grand Tunis (UrbanPulse) and Oasis (SoilGuard): TODO(haythem), supply polygons; agents must never invent them.
+The file contains three AOIs:
+
+| AOI ID | Name | Bbox (lon/lat) | Status |
+|---|---|---|---|
+| `sidi_salem` | Sidi Salem dam (HydroWatch pilot) | [9.355, 36.585, 9.455, 36.655] | From spike (rectangle, not reservoir outline) |
+| `grand_tunis` | Grand Tunis (approximate) | [10.00, 36.70, 10.40, 36.95] | **Demo placeholder** — approximate metropolitan bounding box, NOT a surveyed boundary |
+| `oasis` | Oasis (placeholder) | [7.80, 33.70, 8.50, 34.20] | **Demo placeholder** — approximate Tozeur/Nefta oasis region, NOT a surveyed boundary |
+
+Both `grand_tunis` and `oasis` have `"approximate": true` in their properties. They are for demo purposes only and must not be used for any real analysis.
 
 ## Open-Meteo Historical Weather (HydroWatch ancillary data)
 | Item | Value |

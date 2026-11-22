@@ -1,0 +1,27 @@
+# SmartSDG Core Engine - Orchestrator Service
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files first for better caching
+COPY pyproject.toml ./
+
+# Install Python dependencies with longer timeout
+RUN pip install --no-cache-dir --timeout=300 --retries=5 -e ".[dev]"
+
+# Copy application code
+COPY core/ ./core/
+COPY modules/ ./modules/
+COPY configs/ ./configs/
+COPY data/ ./data/
+COPY dvc.yaml ./
+COPY dvc.lock ./
+COPY .dvc ./
+
+# The orchestrator runs dvc repro for a specific module
+# MODULE environment variable specifies which module to run
+CMD ["sh", "-c", "dvc repro -s ${MODULE:-hydrowatch}"]

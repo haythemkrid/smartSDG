@@ -98,3 +98,39 @@ class ModuleLoader:
 
         # Instantiate with manifest
         return module_class(manifests[module_id])
+
+    def deploy_module(self, module_id: str) -> None:
+        """
+        Deploy a module by validating its manifest and adding it to deployed_modules.yaml.
+
+        This validates the module can be loaded, then registers it in the deployed list.
+
+        Args:
+            module_id: The module identifier to deploy.
+
+        Raises:
+            ValueError: If the module is not found or manifest is invalid.
+        """
+        # Validate by discovering modules (validates manifests)
+        manifests = self.discover_modules()
+        if module_id not in manifests:
+            raise ValueError(f"Module '{module_id}' not found in discovered modules")
+
+        # Validate the module can be loaded (checks import and BaseSDGModule subclass)
+        self.load_module(module_id)
+
+        # Get current deployed modules
+        deployed = self.get_deployed_modules()
+
+        # Add if not already deployed
+        if module_id not in deployed:
+            deployed.append(module_id)
+            self._save_deployed_modules(deployed)
+
+    def _save_deployed_modules(self, deployed: list[str]) -> None:
+        """Save deployed module list to YAML file."""
+        import yaml
+
+        self.deployed_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.deployed_file, "w") as f:
+            yaml.dump({"deployed": deployed}, f, sort_keys=False)

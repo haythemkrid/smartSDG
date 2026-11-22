@@ -5,9 +5,13 @@ sdg: [11]
 sensors: [sentinel-2-l2a]
 indices: [ndbi]
 aoi_id: grand_tunis
-temporal_resolution: yearly
+temporal_resolution: quarterly
 spatial_resolution_m: 10
-params: {}
+params:
+  ndbi:
+    builtup_threshold: 0.0
+    train_sample_pixels: 10000
+    pixel_classifier: {n_estimators: 50, max_depth: 8}
 outputs:
-  - {name: urban_extent, type: cog}
-  - {name: heat_islands, type: geoparquet}
+  - {name: ndbi_layer, type: cog}
+  - {name: builtup_timeseries, type: geoparquet}

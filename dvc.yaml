@@ -1,0 +1,90 @@
+# DVC pipeline for SmartSDG modules
+# Run with: dvc repro
+
+stages:
+  # HydroWatch pipeline
+  hydrowatch_ingest:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline ingest
+    deps:
+      - modules/hydrowatch/module.py
+      - modules/hydrowatch/weather.py
+      - modules/hydrowatch/manifest.yaml
+      - configs/pipeline_default.yaml
+      - configs/tunisia_aois.geojson
+      - core/ingestion/stac_client.py
+      - core/ingestion/indices.py
+      - core/ingestion/geo.py
+      - core/sdk/base_module.py
+      - core/sdk/schemas.py
+      - core/registry/module_loader.py
+    params:
+      - hydrowatch_ingest
+    outs:
+      - data/processed/hydrowatch/ingest.json:
+          cache: true
+
+  hydrowatch_compute_indices:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline compute-indices
+    deps:
+      - data/processed/hydrowatch/ingest.json
+      - modules/hydrowatch/module.py
+      - core/ingestion/indices.py
+      - core/ingestion/geo.py
+    params:
+      - hydrowatch_compute_indices
+    outs:
+      - data/processed/hydrowatch/indices.json:
+          cache: true
+
+  hydrowatch_train:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline train
+    deps:
+      - data/processed/hydrowatch/indices.json
+      - modules/hydrowatch/module.py
+    params:
+      - hydrowatch_train
+    outs:
+      - data/processed/hydrowatch/model.pkl:
+          cache: true
+
+  hydrowatch_infer:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline infer
+    deps:
+      - data/processed/hydrowatch/indices.json
+      - data/processed/hydrowatch/model.pkl
+      - modules/hydrowatch/module.py
+    params:
+      - hydrowatch_infer
+    outs:
+      - data/processed/hydrowatch/predictions.json:
+          cache: true
+
+  hydrowatch_evaluate:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline evaluate
+    deps:
+      - data/processed/hydrowatch/predictions.json
+      - modules/hydrowatch/module.py
+    params:
+      - hydrowatch_evaluate
+    outs:
+      - data/outputs/hydrowatch/metrics.json:
+          cache: true
+      - data/outputs/hydrowatch/area_timeseries.parquet:
+          cache: true
+
+  hydrowatch_export:
+    cmd: .venv/bin/python -m modules.hydrowatch.run_pipeline export
+    deps:
+      - data/processed/hydrowatch/predictions.json
+      - modules/hydrowatch/module.py
+    params:
+      - hydrowatch_export
+    outs:
+      - data/outputs/hydrowatch/water_mask_2026-Q1.tif:
+          cache: true
+      - data/outputs/hydrowatch/water_mask_2026-Q2.tif:
+          cache: true
+      - data/outputs/hydrowatch/water_mask_2026-Q3.tif:
+          cache: true
+      - data/outputs/hydrowatch/water_mask_2026-Q4.tif:
+          cache: true

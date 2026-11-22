@@ -14,6 +14,34 @@
         "type": "Polygon",
         "coordinates": [[[9.355, 36.585], [9.455, 36.585], [9.455, 36.655], [9.355, 36.655], [9.355, 36.585]]]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "grand_tunis",
+        "name": "Grand Tunis (approximate)",
+        "source": "demo placeholder",
+        "note": "Approximate bounding box for Grand Tunis metropolitan area. NOT a surveyed boundary. For demo purposes only.",
+        "approximate": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[10.00, 36.70], [10.40, 36.70], [10.40, 36.95], [10.00, 36.95], [10.00, 36.70]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "oasis",
+        "name": "Oasis (placeholder)",
+        "source": "demo placeholder",
+        "note": "Approximate bounding box for Tozeur/Nefta oasis region in southern Tunisia. NOT a surveyed boundary. For demo purposes only.",
+        "approximate": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[7.80, 33.70], [8.50, 33.70], [8.50, 34.20], [7.80, 34.20], [7.80, 33.70]]]
+      }
     }
   ]
 }

@@ -1,0 +1,53 @@
+{
+  "spike_run_date": "2026-11-21",
+  "source": "hydrowatch_repo/main.py",
+  "metrics": {
+    "mae_ha": 139.90,
+    "mape_pct": 10.20,
+    "n_quarters": 4
+  },
+  "per_quarter": [
+    {
+      "quarter": "2026-Q1",
+      "water_area_ha": 1179.33,
+      "predicted_ha": 1134.26,
+      "error_pct": 3.82
+    },
+    {
+      "quarter": "2026-Q2",
+      "water_area_ha": 1412.80,
+      "predicted_ha": 1183.77,
+      "error_pct": 16.21
+    },
+    {
+      "quarter": "2026-Q3",
+      "water_area_ha": 1420.14,
+      "predicted_ha": 1263.35,
+      "error_pct": 11.04
+    },
+    {
+      "quarter": "2026-Q4",
+      "water_area_ha": 1323.49,
+      "predicted_ha": 1194.78,
+      "error_pct": 9.73
+    }
+  ],
+  "notes": {
+    "scenes_ingested": 16,
+    "train_quarters": "2023-Q1 to 2025-Q4",
+    "test_quarters": "2026-Q1 to 2026-Q4",
+    "defects_preserved": [
+      "SCL read at wrong resolution (20m vs 10m)",
+      "NDWI uses raw DN without reflectance scaling",
+      "Cloud pixels forced to 0 (non-water) without area normalization",
+      "Backtest uses oracle weather (hindcast, not forecast)",
+      "Small sample size (up to 12 train, 4 test rows)",
+      "Weak labels from NDWI threshold, no independent validation",
+      "First scene per quarter selection (variable acquisition date)",
+      "bfill on lag features makes first row lag equal to itself",
+      "Pixel area hardcoded to 0.01 ha",
+      "Catchment weights without documented source",
+      "BBox is rectangle, not reservoir outline"
+    ]
+  }
+}

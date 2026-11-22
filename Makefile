@@ -9,14 +9,14 @@ help:
 	@echo "  make setup           # Create venv and install dependencies"
 	@echo "  make test            # Run offline pytest"
 	@echo "  make lint            # Run ruff linter"
-	@echo "  make run-pipeline    # Run DVC pipeline for a module (not implemented yet)"
-	@echo "  make deploy-module   # Deploy a module (not implemented yet)"
-	@echo "  make up              # Start Docker Compose stack (not implemented yet)"
+	@echo "  make run-pipeline    # Run DVC pipeline for a module (MODULE=hydrowatch)"
+	@echo "  make deploy-module   # Deploy a module (MODULE=hydrowatch)"
+	@echo "  make up              # Start Docker Compose stack (API, MLflow, frontend, orchestrator)"
 
 # Create virtual environment and install dependencies
 setup:
 	@echo "Creating virtual environment..."
-	python3.13 -m venv .venv 2>/dev/null || python3.12 -m venv .venv 2>/dev/null || python3.11 -m venv .venv 2>/dev/null || python3 -m venv .venv
+	python3.11 -m venv .venv 2>/dev/null || python3.12 -m venv .venv 2>/dev/null || python3.10 -m venv .venv 2>/dev/null || python3 -m venv .venv
 	.venv/bin/pip install --upgrade pip
 	.venv/bin/pip install -e ".[dev]"
 	@echo "Setup complete. Activate with: source .venv/bin/activate"
@@ -34,15 +34,18 @@ lint:
 
 # Run pipeline for a module
 run-pipeline:
-	@echo "Error: run-pipeline not implemented yet"
-	@exit 1
+	@if [ -z "$(MODULE)" ]; then echo "Error: MODULE not specified. Usage: make run-pipeline MODULE=hydrowatch"; exit 1; fi
+	@echo "Running DVC pipeline for module: $(MODULE)..."
+	.venv/bin/dvc repro
 
 # Deploy a module
 deploy-module:
-	@echo "Error: deploy-module not implemented yet"
-	@exit 1
+	@if [ -z "$(MODULE)" ]; then echo "Error: MODULE not specified. Usage: make deploy-module MODULE=hydrowatch"; exit 1; fi
+	@echo "Deploying module: $(MODULE)..."
+	.venv/bin/python -c "from core.registry.module_loader import ModuleLoader; loader = ModuleLoader(); loader.deploy_module('$(MODULE)'); print('Module $(MODULE) deployed successfully')"
 
 # Start Docker Compose stack
 up:
-	@echo "Error: up not implemented yet"
-	@exit 1
+	@echo "Starting Docker Compose stack..."
+	docker compose up -d
+	@echo "Services started. API: http://localhost:8000, MLflow: http://localhost:5000, Frontend: http://localhost:8501"

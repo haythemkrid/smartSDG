@@ -1,0 +1,60 @@
+# DVC parameters for SmartSDG pipeline
+# Values from configs/pipeline_default.yaml and modules/hydrowatch/manifest.yaml
+
+hydrowatch_ingest:
+  stac:
+    url: https://planetarycomputer.microsoft.com/api/stac/v1
+    collection: sentinel-2-l2a
+  date_range:
+    start: "2023-01-01"
+    end: "2026-11-01"
+  max_cloud: 15
+  scene_selection: first_per_quarter
+  resolution_m: 10
+  scl_cloud_classes: [3, 8, 9, 10]
+  crs: native
+  seed: 42
+  aoi_id: sidi_salem
+
+hydrowatch_compute_indices:
+  water:
+    weak_label_ndwi_threshold: 0.05
+
+hydrowatch_train:
+  water:
+    weak_label_ndwi_threshold: 0.05
+    train_on: first_scene
+    train_sample_pixels: 20000
+    pixel_classifier:
+      n_estimators: 50
+      max_depth: 8
+  forecast:
+    model:
+      n_estimators: 150
+      max_depth: 4
+    test_start_quarter: "2026-Q1"
+    features: [lag_1_area, weighted_catchment_precip_mm, lag_1_catchment_precip_mm, mean_temp_c, sin_q, cos_q]
+  seed: 42
+
+hydrowatch_infer:
+  forecast:
+    test_start_quarter: "2026-Q1"
+  seed: 42
+
+hydrowatch_evaluate:
+  forecast:
+    test_start_quarter: "2026-Q1"
+
+hydrowatch_export:
+  outputs:
+    - {name: water_mask, type: cog}
+    - {name: area_timeseries, type: geoparquet}
+  weather:
+    provider: open-meteo-archive
+    url: https://archive-api.open-meteo.com/v1/archive
+    timezone: Africa/Tunis
+    precip_points:
+      upper_algeria: {lat: 36.28, lon: 7.95, weight: 0.45}
+      mid_border: {lat: 36.45, lon: 8.44, weight: 0.35}
+      local_beja: {lat: 36.62, lon: 9.40, weight: 0.20}
+    temperature_point: {lat: 36.62, lon: 9.40}
