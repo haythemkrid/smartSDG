@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide",
 )
 
-API_BASE = "http://localhost:8000"
+API_BASE = st.secrets.get("API_BASE", "http://localhost:8000")
 
 
 @st.cache_data(ttl=60)
