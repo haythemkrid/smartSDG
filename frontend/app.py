@@ -15,7 +15,7 @@ st.set_page_config(
 # Read API_BASE from secrets (works on Streamlit Cloud and locally with .streamlit/secrets.toml)
 try:
     API_BASE = st.secrets.get("API_BASE", "http://localhost:8000")
-except (FileNotFoundError, streamlit.errors.StreamlitSecretNotFoundError):
+except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
     API_BASE = "http://localhost:8000"
 
 
